@@ -58,6 +58,8 @@
       "hot": "HOT",
       "loading": "Loading...",
       "lastUpdate": "last updated on {time}",
+      "skipHashCheck": "skip hash check",
+      "forceAutoStart": "force start download",
       "refresh": "Refresh"
     },
     "topbar": {

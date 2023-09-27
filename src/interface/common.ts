@@ -190,6 +190,10 @@ export interface Options {
   encryptSecretKey?: string;
   // 加密方式
   encryptMode?: EEncryptMode;
+  // 强制跳过校验
+  skipHashCheck?: boolean;
+  // 强制自动开始
+  forceAutoStart?: boolean;
   // 允许保存搜索结果快照
   allowSaveSnapshot?: boolean;
 }

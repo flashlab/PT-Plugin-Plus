@@ -29,7 +29,7 @@
       >
     </span>
     <v-spacer></v-spacer>
-    <v-btn
+<!--     <v-btn
       flat
       small
       href="https://t.me/joinchat/NZ9NCxPKXyby8f35rn_QTw"
@@ -86,7 +86,27 @@
           </v-list-tile-title>
         </v-list-tile>
       </v-list>
-    </v-menu>
+    </v-menu> -->
+    <v-btn-toggle v-model="quickDLoptions" multiple>
+      <v-btn flat small :icon="$vuetify.breakpoint.smAndDown">
+        <v-icon v-if="quickDLoptions.includes(0)" color="success" small>check</v-icon>
+        <v-icon v-else small>tag</v-icon>
+        <span class="ml-1" v-if="$vuetify.breakpoint.mdAndUp">
+          {{
+          $t("common.skipHashCheck")
+          }}
+        </span>
+      </v-btn>
+      <v-btn flat small :icon="$vuetify.breakpoint.smAndDown">
+        <v-icon v-if="quickDLoptions.includes(1)" color="success" small>check</v-icon>
+        <v-icon v-else small>flash_auto</v-icon>
+        <span class="ml-1" v-if="$vuetify.breakpoint.mdAndUp">
+          {{
+          $t("common.forceAutoStart")
+          }}
+        </span>
+      </v-btn>
+    </v-btn-toggle>
     <v-btn flat small to="/system-logs" :icon="$vuetify.breakpoint.smAndDown">
       <v-icon small>assignment</v-icon>
       <span class="ml-1" v-if="$vuetify.breakpoint.mdAndUp">
@@ -99,7 +119,7 @@
         {{ $t("common.darkMode") }}
       </span>
     </v-btn>
-    <v-btn
+<!--     <v-btn
       v-if="$vuetify.breakpoint.mdAndUp"
       flat
       small
@@ -110,7 +130,7 @@
     >
       <v-icon small>bug_report</v-icon>
       <span class="ml-1">{{ $t("navigation.support.debugger") }}</span>
-    </v-btn>
+    </v-btn> -->
 
     <v-snackbar v-model="invalidFile" top :timeout="3000" color="error">
       {{ $t("footer.invalidFile") }}
@@ -137,8 +157,20 @@ export default Vue.extend({
       fileInput: null as any,
       currentLanguage: "",
       invalidFile: false,
+      quickDLoptions: [0,1].filter((e, i)=>
+        [this.$store.state.options.skipHashCheck, 
+         this.$store.state.options.forceAutoStart][i]
+      ),
       year: new Date().getFullYear()
     };
+  },
+  watch: {
+    quickDLoptions: function(v) {
+      this.$store.dispatch("saveConfig", {
+          skipHashCheck: v.includes(0),
+          forceAutoStart: v.includes(1)
+        })
+    }
   },
   created() {
     this.languages = window.i18nService.config;

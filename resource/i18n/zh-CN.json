@@ -55,6 +55,8 @@
       "hot": "热门",
       "loading": "正在加载……",
       "lastUpdate": "数据更新于 {time}",
+      "skipHashCheck": "跳过校验",
+      "forceAutoStart": "强制自动开始",
       "refresh": "刷新"
     },
     "topbar": {

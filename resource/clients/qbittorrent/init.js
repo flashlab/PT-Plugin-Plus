@@ -205,6 +205,10 @@
         formData.append("paused", !data.autoStart);
       }
 
+      if (data.skipcheck != undefined) {
+        formData.append("skip_checking", !!data.skipcheck);
+      }
+
       if (data.imdbId != undefined) {
         formData.append("tags", data.imdbId);
       }
