@@ -274,6 +274,7 @@ export default class Controller {
           imdbId: downloadOptions.tagIMDb ? downloadOptions.imdbId : null,
           upLoadLimit: siteConfig !== undefined ? siteConfig.upLoadLimit : null,
           clientOptions: clientConfig.options,
+          siteConfig,
         })
         .then((result: any) => {
           this.service.logger.add({

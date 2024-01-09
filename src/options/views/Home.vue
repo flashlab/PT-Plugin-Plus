@@ -140,7 +140,8 @@
             {{ showUserLevel ? props.item.user.levelName : "****" }}
             <template v-if="showLevelRequirements">
               <template v-if="props.item.levelRequirements">
-                <template v-if="isUserGroup(props.item) && props.item.user.nextLevels && props.item.user.nextLevels.length > 0">
+                <template v-if="isUserGroup(props.item) && isNotMaxUserLevel(props.item)
+                 && props.item.user.nextLevels && props.item.user.nextLevels.length > 0">
                   <template v-for="nextLevel in props.item.user.nextLevels">
                     <div>
                       <v-icon small>keyboard_tab</v-icon>
@@ -161,6 +162,11 @@
                         {{ $t("home.levelRequirement.trueDownloaded") }}
                         {{
                             nextLevel.trueDownloaded | formatSize
+                        }}&nbsp;
+                      </template>
+                      <template v-if="nextLevel.totalTraffic">
+                        <v-icon small color="orange darken-4">swap_vert</v-icon>{{
+                            nextLevel.totalTraffic | formatSize
                         }}&nbsp;
                       </template>
                       <template v-if="nextLevel.bonus">
@@ -188,8 +194,17 @@
                             nextLevel.averageSeedtime | formatNumber
                         }}{{$t("home.levelRequirement.days")}}&nbsp;
                       </template>
+                      <template v-if="nextLevel.totalSeedtime">
+                        <v-icon small color="green darken-4">timer</v-icon>{{
+                            nextLevel.totalSeedtime | formatNumber
+                        }}{{$t("home.levelRequirement.days")}}&nbsp;
+                      </template>
                       <template v-if="nextLevel.uploads">
                         <v-icon small color="green darken-4">file_upload</v-icon>{{ nextLevel.uploads
+                        }}&nbsp;
+                      </template>
+                      <template v-if="nextLevel.snatches">
+                        <v-icon small color="red darken-4">file_download</v-icon>{{ nextLevel.snatches
                         }}&nbsp;
                       </template>
                       <template v-if="nextLevel.downloads">
@@ -233,12 +248,18 @@
                       <template v-if="levelRequirement.uploads">
                         <v-icon small color="green darken-4" :title="$t('home.levelRequirement.uploads')">file_upload</v-icon>{{ levelRequirement.uploads }};
                       </template>
+                      <template v-if="levelRequirement.snatches">
+                        <v-icon small color="red darken-4" :title="$t('home.levelRequirement.snatches')">file_download</v-icon>{{ levelRequirement.snatches }};
+                      </template>
                       <template v-if="levelRequirement.downloaded">
                         <v-icon small color="red darken-4" :title="$t('home.levelRequirement.downloaded')">expand_more</v-icon>{{ levelRequirement.downloaded }};
                       </template>
                       <template v-if="levelRequirement.trueDownloaded">
                         {{ $t("home.levelRequirement.trueDownloaded") }}
                         {{ levelRequirement.trueDownloaded }};
+                      </template>
+                      <template v-if="levelRequirement.totalTraffic">
+                        <v-icon small color="orange darken-4" :title="$t('home.levelRequirement.totalTraffic')">swap_vert</v-icon>{{ levelRequirement.totalTraffic }};
                       </template>
                       <template v-if="levelRequirement.downloads">
                         <v-icon small color="red darken-4" :title="$t('home.levelRequirement.downloads')">file_download</v-icon>{{ levelRequirement.downloads }};
@@ -266,6 +287,11 @@
                       </template>
                       <template v-if="levelRequirement.averageSeedtime">
                         <v-icon small color="green darken-4" :title="$t('home.levelRequirement.averageSeedtime')">timer</v-icon>{{ levelRequirement.averageSeedtime
+                            | formatInteger
+                        }}{{$t("home.levelRequirement.days")}};
+                      </template>
+                      <template v-if="levelRequirement.totalSeedtime">
+                        <v-icon small color="green darken-4" :title="$t('home.levelRequirement.totalSeedtime')">timer</v-icon>{{ levelRequirement.totalSeedtime
                             | formatInteger
                         }}{{$t("home.levelRequirement.days")}};
                       </template>
@@ -301,12 +327,18 @@
                           <template v-if="option.uploads">
                             <v-icon small color="green darken-4" :title="$t('home.levelRequirement.uploads')">file_upload</v-icon>{{ option.uploads }};
                           </template>
+                          <template v-if="option.snatches">
+                            <v-icon small color="red darken-4" :title="$t('home.levelRequirement.snatches')">file_download</v-icon>{{ option.snatches }};
+                          </template>
                           <template v-if="option.downloaded">
                             <v-icon small color="red darken-4" :title="$t('home.levelRequirement.downloaded')">expand_more</v-icon>{{ option.downloaded }};
                           </template>
                           <template v-if="option.trueDownloaded">
                             {{ $t("home.levelRequirement.trueDownloaded") }}
                             {{ option.trueDownloaded }};
+                          </template>
+                          <template v-if="option.totalTraffic">
+                            <v-icon small color="orange darken-4" :title="$t('home.levelRequirement.totalTraffic')">swap_vert</v-icon>{{ option.totalTraffic }};
                           </template>
                           <template v-if="option.downloads">
                             <v-icon small color="red darken-4" :title="$t('home.levelRequirement.downloads')">file_download</v-icon>{{ option.downloads }};
@@ -334,6 +366,11 @@
                           </template>
                           <template v-if="option.averageSeedtime">
                             <v-icon small color="green darken-4" :title="$t('home.levelRequirement.averageSeedtime')">timer</v-icon>{{ option.averageSeedtime
+                                | formatInteger
+                            }}{{$t("home.levelRequirement.days")}};
+                          </template>
+                          <template v-if="option.totalSeedtime">
+                            <v-icon small color="green darken-4" :title="$t('home.levelRequirement.totalSeedtime')">timer</v-icon>{{ option.totalSeedtime
                                 | formatInteger
                             }}{{$t("home.levelRequirement.days")}};
                           </template>
@@ -865,6 +902,15 @@ export default Vue.extend({
       return this.getUserLevelGroup(site) === 'user'
     },
     /**
+     * 适用于站点更改等级规则后, 显示距离下一等级的条件
+     * 因为有些站点可能改了等级名称, 所以这里只做简单的判断是否为 NM. 可以将 config.json 里面的数据同步修改
+     */
+    isNotMaxUserLevel(site: Site) {
+      let maxLevel = site.levelRequirements?.slice(-1)[0]?.name,
+          userLevel = site.user?.levelName
+      return maxLevel !== userLevel
+    },
+    /**
      * 格式化一些用户信息
      */
     formatUserInfo(user: UserInfoEx, site: Site) {
@@ -1044,6 +1090,14 @@ export default Vue.extend({
           nextLevel.level = levelRequirement.level;
         }
       }
+      if (levelRequirement.totalSeedtime) {
+        let usertotalSeedtime = user.totalSeedtime as number;
+        let requiredtotalSeedtime = levelRequirement.totalSeedtime as number;
+        if (usertotalSeedtime < requiredtotalSeedtime) {
+          nextLevel.totalSeedtime = requiredtotalSeedtime - usertotalSeedtime;
+          nextLevel.level = levelRequirement.level;
+        }
+      }
 
       if (levelRequirement.uploads) {
         let userUploads = user.uploads ? user.uploads as number : 0;
@@ -1053,7 +1107,14 @@ export default Vue.extend({
           nextLevel.level = levelRequirement.level;
         }
       }
-
+      if (levelRequirement.snatches) {
+        let userSnatches = user.snatches ? user.snatches as number : 0;
+        let requiredSnatches = levelRequirement.snatches as number;
+        if (userSnatches < requiredSnatches) {
+          nextLevel.snatches = requiredSnatches - userSnatches;
+          nextLevel.level = levelRequirement.level;
+        }
+      }
       if (levelRequirement.downloads) {
         let userDownloads = user.downloads ? user.downloads as number : 0;
         let requiredDownloads = levelRequirement.downloads as number;
@@ -1073,7 +1134,16 @@ export default Vue.extend({
           nextLevel.level = levelRequirement.level;
         }
       }
-
+      if (levelRequirement.totalTraffic) {
+        let userTotalTraffic = user.totalTraffic ? (user.totalTraffic as number) : 0;
+        let requiredTotalTraffic = this.fileSizetoLength(
+          levelRequirement.totalTraffic as string
+        );
+        if (userTotalTraffic < requiredTotalTraffic) {
+          nextLevel.totalTraffic = requiredTotalTraffic - userTotalTraffic;
+          nextLevel.level = levelRequirement.level;
+        }
+      }
       if (levelRequirement.classPoints) {
         let userClassPoints = user.classPoints as number;
         let requiredClassPoints = levelRequirement.classPoints as number;

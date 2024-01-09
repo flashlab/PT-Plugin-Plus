@@ -40,6 +40,8 @@ export interface DownloadClient {
   // 发送种子的时候发送分类
   enableCategory?: boolean;
   qbCategories?: QbCategory[];
+  hostnameAsTag?: boolean;
+  siteNameAsTag?: boolean;
 }
 
 /**
@@ -196,6 +198,7 @@ export interface Options {
   forceAutoStart?: boolean;
   // 允许保存搜索结果快照
   allowSaveSnapshot?: boolean;
+  selectedTags?: string[];
 }
 
 // 在搜索之前一些选项配置
@@ -333,12 +336,16 @@ export interface LevelRequirement {
   uploads?: number;
   // 下载数要求
   downloads?: number;
+  // snatch
+  snatches?: number;
   // 上传量要求
   uploaded?: string | number;
   // 下载量要求
   downloaded?: string | number;
   // 真实下载量
   trueDownloaded?: string | number;
+  // 总流量
+  totalTraffic?: string | number;
   // 积分要求
   bonus?: number;
   // 做种积分要求
@@ -347,6 +354,8 @@ export interface LevelRequirement {
   seedingTime?: number;
   // 平均保种时间要求
   averageSeedtime?: number;
+  // 总保种时间要求
+  totalSeedtime?: number
   // 保种体积要求
   seedingSize?: string | number;
   // 分享率要求
@@ -623,8 +632,12 @@ export interface UserInfo {
   downloaded?: number;
   // 真实下载量
   trueDownloaded?: string | number;
+  // 总流量
+  totalTraffic?: string | number;
   // 下载数
   downloads?: number;
+  // snatch
+  snatches?: number;
   // 分享率
   ratio?: number;
   // 当前做种数量
@@ -645,6 +658,8 @@ export interface UserInfo {
   seedingTime?: number;
   // 平均保种时间
   averageSeedtime?: number;
+  // 总保种时间
+  totalSeedtime?: number;
   // 时魔
   bonusPerHour?: number;
   // 积分页面
