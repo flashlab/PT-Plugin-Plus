@@ -332,11 +332,9 @@ export interface LevelRequirement {
   interval?: string;
   // 日期要求
   requiredDate?: string;
-  // 上传数要求
+  // 发布数要求
   uploads?: number;
-  // 下载数要求
-  downloads?: number;
-  // snatch
+  // 完成数要求
   snatches?: number;
   // 上传量要求
   uploaded?: string | number;
@@ -485,6 +483,7 @@ export interface SearchEntryConfigArea {
   parseScript?: string;
   // 替换默认页面
   page?: string;
+  replaceKeyByTVDB?: string[];
 }
 
 export interface ISearchFieldIndex {
@@ -558,6 +557,8 @@ export interface SearchEntryConfig {
   headers?: Dictionary<any>;
   // 跳过IMDb搜索
   skipIMDbId?: boolean;
+  // 跳过非拉丁字符搜索
+  skipNonLatinCharacters?: boolean;
   // 搜索解析字段索引
   fieldIndex?: ISearchFieldIndex;
   // 数据字段选择器
@@ -634,9 +635,7 @@ export interface UserInfo {
   trueDownloaded?: string | number;
   // 总流量
   totalTraffic?: string | number;
-  // 下载数
-  downloads?: number;
-  // snatch
+  // 完成数
   snatches?: number;
   // 分享率
   ratio?: number;
