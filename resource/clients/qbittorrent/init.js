@@ -191,9 +191,6 @@
           if (qbCategory) {
             // 以用户手动设置为准
             category = qbCategory.name
-            autoTMM = true
-          } else {
-            autoTMM = false
           }
         }
       }

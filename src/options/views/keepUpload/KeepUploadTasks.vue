@@ -366,7 +366,7 @@ export default Vue.extend({
       extension
         .sendRequest(EAction.loadKeepUploadTask)
         .then((result: any[]) => {
-          console.log(result);
+          // console.log(result);
           this.resetItems(result);
         });
     },
@@ -416,7 +416,7 @@ export default Vue.extend({
      * 发送下载任务到后台
      */
     sendTorrentsInBackground(items: DownloadOptions[]) {
-      console.log(items);
+      // console.log(items);
 
       if (items.length > 1) {
         if (
