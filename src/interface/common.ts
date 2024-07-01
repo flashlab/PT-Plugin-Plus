@@ -319,7 +319,8 @@ export interface Site {
   // 使用站点标签进行分组
   // siteGroups?: string[];
   // token in headers
-  authToken?: string
+  authToken?: string;
+  apiCdn?: string[];
 }
 
 /**
