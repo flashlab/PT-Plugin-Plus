@@ -22,6 +22,7 @@ import { PathHandler } from "@/service/pathHandler";
 import i18n from "i18next";
 import { InfoParser } from "@/background/infoParser";
 import { PPF } from "@/service/public";
+import store from "@/options/store";
 
 declare global {
   interface Window {
@@ -453,6 +454,24 @@ class PTPContent {
     ).appendTo(this.buttonBar);
     this.logo.on("click", () => {
       this.call(EAction.openOptions);
+    });
+    let extBtn = $("<div class='pt-plugin-button' />").appendTo(this.buttonBar);
+    let btnSkipHash = $($.parseHTML(
+      "<a class='pt-plugin-button" + (this.options.skipHashCheck ? " active" : "") + "' style='border-right:1px solid lightgray' title='"
+       + i18n.t("skipHashCheck") + "'><i class='material-icons md-36'>tag</i></a>"
+    )).appendTo(extBtn);
+    let btnAutoStart = $($.parseHTML(
+      "<a class='pt-plugin-button" + (this.options.forceAutoStart ? " active" : "") + "' title='"
+       + i18n.t("forceAutoStart") + "'><i class='material-icons md-36'>flash_auto</i></a>"
+    )).appendTo(extBtn);
+    btnAutoStart.on("click", () => {
+      btnAutoStart.toggleClass('active');
+      store.dispatch("saveConfig", { forceAutoStart: true })
+    });
+    btnSkipHash.on("click", () => {
+      btnSkipHash.toggleClass('active');
+      btnAutoStart.hasClass('active');
+      store.dispatch("saveConfig", { skipHashCheck: true })
     });
     this.initButtonBarPosition();
     this.buttonBar.hide();

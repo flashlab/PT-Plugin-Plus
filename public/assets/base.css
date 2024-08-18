@@ -73,9 +73,10 @@
   cursor: pointer;
   text-decoration: none;
   color: #1976d2;
+  width: 100%;
 }
 
-.pt-plugin-body a.pt-plugin-button:hover {
+.pt-plugin-body a.pt-plugin-button:hover, .pt-plugin-body a.pt-plugin-button.active {
   background-color: rgba(77, 154, 231, 0.226)
 }
 

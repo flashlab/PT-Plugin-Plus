@@ -952,6 +952,8 @@
       "callbackFailed": "{label} An error has occurred. Please try again.",
       "notSupported": "This operation is not supported on the current page",
       "buttons": {
+        "skipHashCheck": "skip hash check",
+        "forceAutoStart": "force start download",
         "downloadAll": "Download All",
         "downloadAllTip": "Download all torrent from the current page to [{name}]",
         "downloadAllTo": "Download to",

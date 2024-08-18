@@ -941,6 +941,8 @@
       }
     },
     "contentPage": {
+      "skipHashCheck": "跳过校验",
+      "forceAutoStart": "强制自动开始",
       "backgroundServiceIsStoped": "插件已被禁用或重启过，请刷新页面后再重试",
       "actionExecutionFailed": "{action} 执行出错，可能后台服务不可用",
       "pluginTitle": "PT助手 - 点击打开配置页",
