@@ -321,6 +321,7 @@ export interface Site {
   // token in headers
   authToken?: string;
   apiCdn?: string[];
+  getInfoAjaxCache?: boolean;
 }
 
 /**
