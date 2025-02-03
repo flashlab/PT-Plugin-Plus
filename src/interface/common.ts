@@ -334,8 +334,12 @@ export interface Site {
   // siteGroups?: string[];
   // token in headers
   authToken?: string;
+  tokenRequired? : boolean;
+  tokenTip?: string;
   apiCdn?: string[];
   getInfoAjaxCache?: boolean;
+  
+
 }
 
 /**
